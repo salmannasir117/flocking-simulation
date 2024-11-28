@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Main : MonoBehaviour
@@ -20,10 +18,12 @@ public class Main : MonoBehaviour
         // boids[0] = test_boid;
 
         boids = new Boid[num_boids];
-        float max_vel = 1.5f, min_vel = -1.5f;
+        float max_vel = 1.0f, min_vel = -1.0f;
+        float max_pos = 4.0f, min_pos = -4.0f;
         for (int i = 0; i < num_boids; i++) {
-            Vector3 rand_velocity = new Vector3(Random.value * (max_vel - min_vel) + min_vel, 0, Random.value * (max_vel - min_vel) + min_vel);
-            boids[i] = new Boid(new Vector3(0,0,0), rand_velocity);
+            Vector3 rand_velocity = new Vector3(random_from(min_vel, max_vel), 0, random_from(min_vel, max_vel));
+            Vector3 rand_pos = new Vector3(random_from(min_pos, max_pos), 0, random_from(min_pos, max_pos));
+            boids[i] = new Boid(rand_pos, rand_velocity);
         }
     }
 
@@ -41,9 +41,24 @@ public class Main : MonoBehaviour
     void Update()
     {
         
+        //calculate forces
+        foreach (Boid boid in boids) {
+            //wander force 
+            if (wandering) {
+                Vector3 wander_force = new Vector3(random_from(-1, 1), 0, random_from(-1, 1));
+                boid.set_wander_force(wander_force);
+            }
+        }
+        
+        //update velocity and position 
+        foreach (Boid boid in boids) {
+            boid.update_velocity(dt);
+            boid.update_position(dt);
+        }
+        
+        //draw 
         foreach (Boid boid in boids) {
             if (boid == null) continue;
-            boid.update_position(dt);
             boid.draw();
         } 
 
@@ -53,5 +68,9 @@ public class Main : MonoBehaviour
         // test_position += new Vector3(0.0f, 0.0f, 0.001f);
         // Debug.Log(test_position);
 
+    }
+
+    float random_from(float min, float max) {
+        return Random.value * (max - min) + min;
     }
 }

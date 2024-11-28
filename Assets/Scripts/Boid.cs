@@ -6,10 +6,13 @@ public class Boid
     Vector3 velocity;
 
     GameObject game_object;
+    const float wander_weight = 1.0f;
+    Vector3 wander_force;
 
     public Boid(Vector3 pos, Vector3 vel) {
         position = pos;
         velocity = vel;
+        wander_force = new Vector3(0,0,0);
         Mesh mesh = make_mesh();
         game_object = make_game_object(mesh);
 
@@ -42,10 +45,21 @@ public class Boid
         return Vector3.Normalize(velocity);
     }
 
+    public void set_wander_force(Vector2 v) {
+        wander_force = v;
+    }
+
+    Vector3 get_total_force() {
+        return wander_weight * wander_force;
+    }
     public void update_position(float dt) {
         position = position + velocity * dt;
     }
     
+    public void update_velocity(float dt) {
+        Vector3 total_force = get_total_force();
+        velocity = velocity + dt * total_force;
+    }
 
     //set gameobject position and rotation based on position and velocity
     public void draw() {
