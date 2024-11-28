@@ -12,6 +12,7 @@ public class Main : MonoBehaviour
 
     const float west_wall = -10.0f, east_wall = 10.0f, north_wall = 10.0f, south_wall = -10.0f;
     const float min_speed = 0.15f, max_speed = 1.0f;
+    const float flock_radius = 2.0f;
     // Start is called before the first frame update
     void Start()
     {
@@ -50,6 +51,16 @@ public class Main : MonoBehaviour
             if (wandering) {
                 Vector3 wander_force = new Vector3(random_from(-1, 1), 0, random_from(-1, 1));
                 boid.set_wander_force(wander_force);
+            } 
+            if (leave_trail) {
+                boid.enable_trail();
+            } else {
+                boid.disable_trail();
+            }
+            if (flock_centering) {
+                // List<Boid> flock_neighbors = find_flock_neighbors(boids, boid, flock_radius);
+                Vector3 flocking_force = find_flocking_force(boids, boid, flock_radius);
+                boid.set_flocking_force(flocking_force);
             }
         }
         
@@ -103,5 +114,24 @@ public class Main : MonoBehaviour
             return Vector3.Normalize(vel) * max_speed;
         }
         return new Vector3(0,0,0);
+    }
+
+    Vector3 find_flocking_force(Boid[] boids, Boid current_boid, float flock_radius) {
+        // List<Boid> output = new List<Boid>();
+        const float epsilon = 0.01f;
+        float weight_total = 0;
+        Vector3 numerator = new Vector3(0,0,0);
+        foreach (Boid b in boids) {
+            if (b == current_boid) continue;
+            float distance = Vector3.Distance(b.get_position(), current_boid.get_position());
+            if (distance <= flock_radius) {
+                // found close enough neighbor
+                float weight = 1 / (distance * distance + epsilon);
+                numerator += weight * (b.get_position() - current_boid.get_position());
+                weight_total += weight;
+            }
+        }
+        if (weight_total == 0) return new Vector3(0,0,0);
+        return numerator / weight_total;
     }
 }

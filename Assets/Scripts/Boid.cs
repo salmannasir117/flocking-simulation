@@ -6,13 +6,14 @@ public class Boid
     Vector3 velocity;
 
     GameObject game_object;
-    const float wander_weight = 1.6f;
-    Vector3 wander_force;
+    const float wander_weight = 1.6f, flocking_weight = 2.0f;
+    Vector3 wander_force, flocking_force;
 
     public Boid(Vector3 pos, Vector3 vel) {
         position = pos;
         velocity = vel;
         wander_force = new Vector3(0,0,0);
+        flocking_force = new Vector3(0,0,0);
         Mesh mesh = make_mesh();
         game_object = make_game_object(mesh);
 
@@ -23,6 +24,7 @@ public class Boid
         // the second argument, upwards, defaults to Vector3.up
         Quaternion rotation = Quaternion.LookRotation(dir, Vector3.up);
         game_object.transform.rotation = rotation;
+
 
     }
 
@@ -49,8 +51,11 @@ public class Boid
         wander_force = v;
     }
 
+    public void set_flocking_force(Vector2 v) {
+        flocking_force = v;
+    }
     Vector3 get_total_force() {
-        return wander_weight * wander_force;
+        return wander_weight * wander_force + flocking_weight * flocking_force;
     }
     public void update_position(float dt) {
         position = position + velocity * dt;
@@ -61,6 +66,16 @@ public class Boid
         velocity = velocity + dt * total_force;
     }
 
+    public void enable_trail() {
+        TrailRenderer tr = game_object.GetComponent<TrailRenderer>();
+        tr.enabled = true;
+    }
+
+    public void disable_trail() {
+        TrailRenderer tr = game_object.GetComponent<TrailRenderer>();
+        tr.Clear();
+        tr.enabled = false;
+    }
     //set gameobject position and rotation based on position and velocity
     public void draw() {
         Vector3 dir = Vector3.Normalize(velocity);
@@ -122,6 +137,12 @@ public class Boid
         output.GetComponent<MeshFilter>().mesh = mesh;
         Renderer rend = output.GetComponent<Renderer>();
         rend.material.color = Color.white;
+
+        output.AddComponent<TrailRenderer>();
+        TrailRenderer tr = output.GetComponent<TrailRenderer>();
+        tr.startWidth = 0.5f;
+        tr.endWidth = 0.5f;
+        tr.time = 2.0f;
         return output;
     }
 }
