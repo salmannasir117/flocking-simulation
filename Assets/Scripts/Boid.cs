@@ -47,11 +47,11 @@ public class Boid
         return Vector3.Normalize(velocity);
     }
 
-    public void set_wander_force(Vector2 v) {
+    public void set_wander_force(Vector3 v) {
         wander_force = v;
     }
 
-    public void set_flocking_force(Vector2 v) {
+    public void set_flocking_force(Vector3 v) {
         flocking_force = v;
     }
     Vector3 get_total_force() {

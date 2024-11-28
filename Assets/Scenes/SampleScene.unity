@@ -151,11 +151,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fa4d7b96745b4a7da125555ef615ec5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  flock_centering: 0
+  flock_centering: 1
   velocity_matching: 0
   collision_avoidance: 0
   wandering: 1
-  leave_trail: 0
+  leave_trail: 1
 --- !u!4 &658186782
 Transform:
   m_ObjectHideFlags: 0

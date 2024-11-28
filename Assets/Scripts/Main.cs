@@ -51,7 +51,9 @@ public class Main : MonoBehaviour
             if (wandering) {
                 Vector3 wander_force = new Vector3(random_from(-1, 1), 0, random_from(-1, 1));
                 boid.set_wander_force(wander_force);
-            } 
+            } else {
+                boid.set_wander_force(new Vector3(0,0,0));
+            }
             if (leave_trail) {
                 boid.enable_trail();
             } else {
@@ -61,6 +63,8 @@ public class Main : MonoBehaviour
                 // List<Boid> flock_neighbors = find_flock_neighbors(boids, boid, flock_radius);
                 Vector3 flocking_force = find_flocking_force(boids, boid, flock_radius);
                 boid.set_flocking_force(flocking_force);
+            } else {
+                boid.set_flocking_force(new Vector3(0,0,0));
             }
         }
         
@@ -124,6 +128,8 @@ public class Main : MonoBehaviour
         foreach (Boid b in boids) {
             if (b == current_boid) continue;
             float distance = Vector3.Distance(b.get_position(), current_boid.get_position());
+            
+            //calculate flocking force
             if (distance <= flock_radius) {
                 // found close enough neighbor
                 float weight = 1 / (distance * distance + epsilon);
