@@ -6,8 +6,8 @@ public class Boid
     Vector3 velocity;
 
     GameObject game_object;
-    const float wander_weight = 1.6f, flocking_weight = 2.0f, collision_weight = 2.0f;
-    Vector3 wander_force, flocking_force, collision_force;
+    const float wander_weight = 1.6f, flocking_weight = 2.0f, collision_weight = 2.0f, velocity_matching_weight = 1.5f;
+    Vector3 wander_force, flocking_force, collision_force, velocity_matching_force;
 
     public Boid(Vector3 pos, Vector3 vel) {
         position = pos;
@@ -59,8 +59,15 @@ public class Boid
     public void set_collision_force(Vector3 v) {
         collision_force = v;
     }
+
+    public void set_velocity_matching_force(Vector3 v) {
+        velocity_matching_force = v;
+    }
     Vector3 get_total_force() {
-        return wander_weight * wander_force + flocking_weight * flocking_force + collision_weight * collision_force;
+        return wander_weight * wander_force 
+            + flocking_weight * flocking_force 
+            + collision_weight * collision_force
+            + velocity_matching_weight * velocity_matching_force;
     }
     public void update_position(float dt) {
         position = position + velocity * dt;
