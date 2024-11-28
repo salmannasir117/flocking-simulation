@@ -12,7 +12,7 @@ public class Main : MonoBehaviour
 
     const float west_wall = -10.0f, east_wall = 10.0f, north_wall = 10.0f, south_wall = -10.0f;
     const float min_speed = 0.15f, max_speed = 1.0f;
-    const float flock_radius = 2.0f;
+    const float flock_radius = 2.0f, collision_radius = 1.5f;
     // Start is called before the first frame update
     void Start()
     {
@@ -59,13 +59,24 @@ public class Main : MonoBehaviour
             } else {
                 boid.disable_trail();
             }
+
+            //interate, get each individual force.
+            //if (not enabled), set force to zero
             if (flock_centering) {
                 // List<Boid> flock_neighbors = find_flock_neighbors(boids, boid, flock_radius);
                 Vector3 flocking_force = find_flocking_force(boids, boid, flock_radius);
                 boid.set_flocking_force(flocking_force);
             } else {
                 boid.set_flocking_force(new Vector3(0,0,0));
+            } 
+
+            if (collision_avoidance) {
+                Vector3 collision_force = find_collision_force(boids, boid, collision_radius);
+                boid.set_collision_force(collision_force);
+            } else {
+                boid.set_collision_force(new Vector3(0,0,0));
             }
+
         }
         
         //update velocity and position 
@@ -139,5 +150,19 @@ public class Main : MonoBehaviour
         }
         if (weight_total == 0) return new Vector3(0,0,0);
         return numerator / weight_total;
+    }
+
+    Vector3 find_collision_force(Boid[] boids, Boid current_boid, float collision_radius) {
+        const float epsilon = 0.01f;
+        Vector3 total = new Vector3(0,0,0);
+        foreach (Boid b in boids) {
+            if (b == current_boid) continue;
+            float collision_distance = Vector3.Distance(current_boid.get_position(), b.get_position());
+            if (collision_distance < collision_radius) {
+                float weight = 1 / (collision_distance * collision_distance + epsilon);
+                total += weight * (current_boid.get_position() - b.get_position());
+            }
+        }
+        return total;
     }
 }

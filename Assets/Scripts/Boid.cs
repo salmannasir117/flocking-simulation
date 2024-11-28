@@ -6,14 +6,15 @@ public class Boid
     Vector3 velocity;
 
     GameObject game_object;
-    const float wander_weight = 1.6f, flocking_weight = 2.0f;
-    Vector3 wander_force, flocking_force;
+    const float wander_weight = 1.6f, flocking_weight = 2.0f, collision_weight = 2.0f;
+    Vector3 wander_force, flocking_force, collision_force;
 
     public Boid(Vector3 pos, Vector3 vel) {
         position = pos;
         velocity = vel;
         wander_force = new Vector3(0,0,0);
         flocking_force = new Vector3(0,0,0);
+        collision_force = new Vector3(0,0,0);
         Mesh mesh = make_mesh();
         game_object = make_game_object(mesh);
 
@@ -54,8 +55,12 @@ public class Boid
     public void set_flocking_force(Vector3 v) {
         flocking_force = v;
     }
+
+    public void set_collision_force(Vector3 v) {
+        collision_force = v;
+    }
     Vector3 get_total_force() {
-        return wander_weight * wander_force + flocking_weight * flocking_force;
+        return wander_weight * wander_force + flocking_weight * flocking_force + collision_weight * collision_force;
     }
     public void update_position(float dt) {
         position = position + velocity * dt;
