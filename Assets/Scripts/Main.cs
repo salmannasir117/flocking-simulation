@@ -9,6 +9,9 @@ public class Main : MonoBehaviour
     Boid[] boids;
     const int num_boids = 20;
     const float dt = 0.005f;
+
+    const float west_wall = -10.0f, east_wall = 10.0f, north_wall = 10.0f, south_wall = -10.0f;
+    const float min_speed = 0.15f, max_speed = 1.0f;
     // Start is called before the first frame update
     void Start()
     {
@@ -53,7 +56,11 @@ public class Main : MonoBehaviour
         //update velocity and position 
         foreach (Boid boid in boids) {
             boid.update_velocity(dt);
+            //TODO: clamp velocity here
+            boid.set_velocity(clamp(boid.get_velocity(), min_speed, max_speed));
+            //update position, bounce bird if needed
             boid.update_position(dt);
+            check_boundary(boid);
         }
         
         //draw 
@@ -72,5 +79,29 @@ public class Main : MonoBehaviour
 
     float random_from(float min, float max) {
         return Random.value * (max - min) + min;
+    }
+
+    void check_boundary(Boid boid) {
+        // float error = 0.1f;
+        Vector3 position = boid.get_position();
+        Vector3 velocity = boid.get_velocity();
+        if (position.x >= east_wall || position.x <= west_wall) {
+            boid.set_velocity(new Vector3(-velocity.x, velocity.y, velocity.z));
+        } 
+        if (position.z >= north_wall || position.z <= south_wall) {
+            boid.set_velocity(new Vector3(velocity.x, velocity.y, -velocity.z));
+        }
+    }
+
+    Vector3 clamp(Vector3 vel, float min_speed, float max_speed) {
+        float magnitude = Vector3.Magnitude(vel);
+        if (magnitude >= min_speed && magnitude <= max_speed) {
+            return vel;
+        } else if (magnitude < min_speed) {
+            return Vector3.Normalize(vel) * min_speed;
+        } else if (magnitude > max_speed) {
+            return Vector3.Normalize(vel) * max_speed;
+        }
+        return new Vector3(0,0,0);
     }
 }

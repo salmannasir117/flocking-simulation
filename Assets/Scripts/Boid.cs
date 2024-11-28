@@ -6,7 +6,7 @@ public class Boid
     Vector3 velocity;
 
     GameObject game_object;
-    const float wander_weight = 1.0f;
+    const float wander_weight = 1.6f;
     Vector3 wander_force;
 
     public Boid(Vector3 pos, Vector3 vel) {
