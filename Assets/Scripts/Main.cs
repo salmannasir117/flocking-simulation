@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 
 public class Main : MonoBehaviour
@@ -9,6 +10,7 @@ public class Main : MonoBehaviour
     Boid[] boids;
     const int num_boids = 20;
     const float dt = 0.005f;
+    public float speed_multiplier = 1;
 
     const float west_wall = -52.0f, east_wall = 52.0f, north_wall = 29.0f, south_wall = -29.0f;
     const float min_speed = 0.15f, max_speed = 1.5f;
@@ -89,11 +91,11 @@ public class Main : MonoBehaviour
         
         //update velocity and position 
         foreach (Boid boid in boids) {
-            boid.update_velocity(dt);
+            boid.update_velocity(speed_multiplier * dt);
             //TODO: clamp velocity here
             boid.set_velocity(clamp(boid.get_velocity(), min_speed, max_speed));
             //update position, bounce bird if needed
-            boid.update_position(dt);
+            boid.update_position(speed_multiplier * dt);
             check_boundary(boid);
         }
         
