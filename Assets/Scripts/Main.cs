@@ -10,8 +10,8 @@ public class Main : MonoBehaviour
     const int num_boids = 20;
     const float dt = 0.005f;
 
-    const float west_wall = -10.0f, east_wall = 10.0f, north_wall = 10.0f, south_wall = -10.0f;
-    const float min_speed = 0.15f, max_speed = 1.0f;
+    const float west_wall = -52.0f, east_wall = 52.0f, north_wall = 29.0f, south_wall = -29.0f;
+    const float min_speed = 0.15f, max_speed = 1.5f;
     const float flock_radius = 2.0f, collision_radius = 1.5f, velocity_matching_radius = 1.2f;
     // Start is called before the first frame update
     void Start()
@@ -23,10 +23,11 @@ public class Main : MonoBehaviour
 
         boids = new Boid[num_boids];
         float max_vel = 1.0f, min_vel = -1.0f;
-        float max_pos = 9.0f, min_pos = -9.0f;
+        float max_z_pos = north_wall - 1.0f, min_z_pos = south_wall + 1.0f;
+        float max_x_pos = east_wall - 1.0f, min_x_pos = west_wall + 1.0f;
         for (int i = 0; i < num_boids; i++) {
             Vector3 rand_velocity = new Vector3(random_from(min_vel, max_vel), 0, random_from(min_vel, max_vel));
-            Vector3 rand_pos = new Vector3(random_from(min_pos, max_pos), 0, random_from(min_pos, max_pos));
+            Vector3 rand_pos = new Vector3(random_from(min_x_pos, max_x_pos), 0, random_from(min_z_pos, max_z_pos));
             boids[i] = new Boid(rand_pos, rand_velocity);
         }
     }
