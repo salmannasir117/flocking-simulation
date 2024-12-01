@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -7,7 +8,7 @@ public class Main : MonoBehaviour
     public bool flock_centering, velocity_matching, collision_avoidance, wandering, leave_trail;
     Boid test_boid;
     Vector3 test_position;
-    Boid[] boids;
+    List<Boid> boids;
     const int num_boids = 20;
     const float dt = 0.005f;
     public float speed_multiplier = 1;
@@ -29,11 +30,12 @@ public class Main : MonoBehaviour
         // test_position = new Vector3(0,0,0);
         // boids[0] = test_boid;
 
-        boids = new Boid[num_boids];
+        boids = new List<Boid>(num_boids);
         for (int i = 0; i < num_boids; i++) {
             Vector3 rand_velocity = new Vector3(random_from(min_vel, max_vel), 0, random_from(min_vel, max_vel));
             Vector3 rand_pos = new Vector3(random_from(min_x_pos, max_x_pos), 0, random_from(min_z_pos, max_z_pos));
-            boids[i] = new Boid(rand_pos, rand_velocity);
+            // boids[i] = new Boid(rand_pos, rand_velocity);
+            boids.Insert(i, new Boid(rand_pos, rand_velocity));
         }
     }
 
@@ -146,7 +148,7 @@ public class Main : MonoBehaviour
         return new Vector3(0,0,0);
     }
 
-    Vector3 find_flocking_force(Boid[] boids, Boid current_boid, float flock_radius) {
+    Vector3 find_flocking_force(List<Boid> boids, Boid current_boid, float flock_radius) {
         // List<Boid> output = new List<Boid>();
         const float epsilon = 0.01f;
         float weight_total = 0;
@@ -167,7 +169,7 @@ public class Main : MonoBehaviour
         return numerator / weight_total;
     }
 
-    Vector3 find_collision_force(Boid[] boids, Boid current_boid, float collision_radius) {
+    Vector3 find_collision_force(List<Boid> boids, Boid current_boid, float collision_radius) {
         const float epsilon = 0.01f;
         Vector3 total = new Vector3(0,0,0);
         foreach (Boid b in boids) {
@@ -181,7 +183,7 @@ public class Main : MonoBehaviour
         return total;
     }
 
-    Vector3 find_velocity_matching_force(Boid[] boids, Boid current_boid, float velocity_matching_force) {
+    Vector3 find_velocity_matching_force(List<Boid> boids, Boid current_boid, float velocity_matching_force) {
         const float epsilon = 0.01f;
         Vector3 total = new Vector3(0,0,0);
         foreach (Boid b in boids) {
@@ -195,7 +197,7 @@ public class Main : MonoBehaviour
         return total;
     }
 
-    void scatter(Boid[] boids) {
+    void scatter(List<Boid> boids) {
         foreach (Boid b in boids) {
             //should i give them a new random_velocity??
             Vector3 rand_velocity = new Vector3(random_from(min_vel, max_vel), 0, random_from(min_vel, max_vel));
