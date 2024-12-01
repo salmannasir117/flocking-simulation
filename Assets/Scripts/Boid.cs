@@ -88,11 +88,11 @@ public class Boid
         tr.Clear();
         tr.enabled = false;
     }
+    
     //set gameobject position and rotation based on position and velocity
     public void draw() {
         Vector3 dir = Vector3.Normalize(velocity);
-        // Vector3 relativePos = target.position - transform.position;
-
+       
         // the second argument, upwards, defaults to Vector3.up
         Quaternion rotation = Quaternion.LookRotation(dir, Vector3.up);
         game_object.transform.rotation = rotation;
@@ -156,5 +156,9 @@ public class Boid
         tr.endWidth = 0.5f;
         tr.time = 2.0f;
         return output;
+    }
+
+    public GameObject get_game_object() {
+        return game_object;
     }
 }
