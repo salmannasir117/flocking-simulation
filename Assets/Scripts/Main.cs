@@ -6,10 +6,10 @@ public class Main : MonoBehaviour
     
     public bool flock_centering, velocity_matching, collision_avoidance, wandering, leave_trail;
     List<Boid> boids;
-    public int num_boids = 20;
+    public int num_boids = 30;
     const float dt = 0.005f;
     public float speed_multiplier = 1;
-    const int MAX_BOIDS = 100;
+    const int MAX_BOIDS = 1000;
 
     const float west_wall = -52.0f, east_wall = 52.0f, north_wall = 29.0f, south_wall = -29.0f;
     const float min_speed = 0.15f, max_speed = 1.5f;
@@ -22,7 +22,7 @@ public class Main : MonoBehaviour
         
     void Start()
     {
-        num_boids = 20;
+        num_boids = 30;
         boids = new List<Boid>(num_boids);
         for (int i = 0; i < num_boids; i++) {
             Vector3 rand_velocity = new Vector3(random_from(min_vel, max_vel), 0, random_from(min_vel, max_vel));
