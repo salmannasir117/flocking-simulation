@@ -1,0 +1,1 @@
+To run the code, just click the play button. There are checkboxes for each force and for the tail function. You can type a new number of boids to display up to a max of 100 (arbitrarily chosen, just so the program doesn't crash). You can also change the speed using the speed multiplier.
