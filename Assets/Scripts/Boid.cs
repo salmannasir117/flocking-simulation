@@ -6,7 +6,7 @@ public class Boid
     Vector3 velocity;
 
     GameObject game_object;
-    const float wander_weight = 1.6f, flocking_weight = 2.0f, collision_weight = 2.0f, velocity_matching_weight = 1.5f;
+    const float wander_weight = 1.6f, flocking_weight = 2.0f, collision_weight = 2.15f, velocity_matching_weight = 1.8f;
     Vector3 wander_force, flocking_force, collision_force, velocity_matching_force;
 
     public Boid(Vector3 pos, Vector3 vel) {
