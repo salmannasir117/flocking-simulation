@@ -22,7 +22,7 @@ public class Main : MonoBehaviour
         
     void Start()
     {
-        num_boids = 30;
+        // num_boids = 30;
         boids = new List<Boid>(num_boids);
         for (int i = 0; i < num_boids; i++) {
             Vector3 rand_velocity = new Vector3(random_from(min_vel, max_vel), 0, random_from(min_vel, max_vel));
@@ -104,10 +104,10 @@ public class Main : MonoBehaviour
         
         //update + clamp velocity and position
         foreach (Boid boid in boids) {
-            boid.update_velocity(speed_multiplier * dt);
+            boid.update_velocity(speed_multiplier * dt * Time.deltaTime);
             boid.set_velocity(clamp(boid.get_velocity(), min_speed, max_speed));
             //update position, bounce bird if needed
-            boid.update_position(speed_multiplier * dt);
+            boid.update_position(speed_multiplier * dt * Time.deltaTime);
             check_boundary(boid);
         }
         

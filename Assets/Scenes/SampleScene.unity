@@ -156,6 +156,8 @@ MonoBehaviour:
   collision_avoidance: 1
   wandering: 1
   leave_trail: 1
+  num_boids: 500
+  speed_multiplier: 2000
 --- !u!4 &658186782
 Transform:
   m_ObjectHideFlags: 0
